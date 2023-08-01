@@ -4,86 +4,59 @@ const $team1Score = document.getElementById("score-team1");
 const $team1Wickets = document.getElementById("wickets-team1");
 const $team2Score = document.getElementById("score-team2");
 const $team2Wickets = document.getElementById("wickets-team2");
-
+const tballs=document.querySelectorAll(".ball");
 const strikeAudio = new Audio("http://bit.ly/so-ball-hit");
 const gameOverAudio = new Audio("http://bit.ly/so-crowd-cheer");
 
-var team1Score = 0;
-var team1Wickets = 0;
-var team2Score = 0;
-var team2Wickets = 0;
-var team1BallsFaced = 0;
-var team2BallsFaced = 0;
-var turn = 1;
-
-const possibleOutcomes = [0, 1, 2, 3, 4, 6, "W"];
-
-function gameOver() {
-  gameOverAudio.play();
-  if (team1Score > team2Score) alert("IND wins");
-  if (team2Score > team1Score) alert("PAK wins");
-  if (team2Score === team1Score) alert("It is another superover!");
-}
-
-function updateScore() {
-  $team1Score.textContent = team1Score;
-  $team1Wickets.textContent = team1Wickets;
-  $team2Score.textContent = team2Score;
-  $team2Wickets.textContent = team2Wickets;
-}
-
-resetButton.onclick = () => {
-  window.location.reload();
-};
-
-strikeButton.onclick = () => {
-  //play audio
-  strikeAudio.pause();
-  strikeAudio.currentTime = 0;
-  strikeAudio.play();
-
-  //generate random strike value
-  const randomElement =
-    possibleOutcomes[Math.floor(Math.random() * possibleOutcomes.length)];
-
-  //second batting
-  if (turn === 2) {
-    //increase ball count
-    team2BallsFaced++;
-    //update score for the ball
-    document.querySelector(
-      `#team2-superover div:nth-child(${team2BallsFaced})`
-    ).textContent = randomElement;
-    // if wicket, update wickets variable
-    if (randomElement === "W") {
-      team2Wickets++;
+let wicket1=0
+let wicket2=0
+let score1=0
+let score2=0
+resetButton.addEventListener("click",()=>window.location.reload())
+let array=[1,2,3,4,6,"w"]
+ var team = 0
+strikeButton.addEventListener("click",function(){
+  let a=Math.floor((Math.random()*array.length));
+  let b = array[a];
+  tballs[team].textContent= b;
+  console.log(tballs[team])
+  team++;
+  if (team<=6 && wicket1<=2){
+    if (b=="w"){
+      wicket1+=1;
+      $team1Wickets.innerText=wicket1;
     }
-    // else update score
+    else{
+      score1+=b;
+      $team1Score.innerText=score1;
+    }
+   
+  } 
+ else if(team>6 && wicket2<=2){
+    if(b=="w"){
+      wicket2+=1;
+      $team2Wickets.innerText=wicket2;
+    }
     else {
-      team2Score += randomElement;
+      score2+=b;
+      $team2Score.innerText=score2;
     }
-    // Game over condition
-    if (
-      team2BallsFaced === 6 ||
-      team2Wickets === 2 ||
-      team2Score > team1Score
-    ) {
-      turn = 3;
-      gameOver();
-    }
-  }
 
-  if (turn === 1) {
-    team1BallsFaced++;
-    document.querySelector(
-      `#team1-superover div:nth-child(${team1BallsFaced})`
-    ).textContent = randomElement;
-    if (randomElement === "W") {
-      team1Wickets++;
-    } else {
-      team1Score += randomElement;
-    }
-    if (team1BallsFaced === 6 || team1Wickets === 2) turn = 2;
   }
-  updateScore();
-}; 
+  if (team>=12){
+    gameOverAudio.play();
+  if (score1>score2 || wicket2 == 2){
+    alert("INDIA WON")
+  }
+  else if (score2>score1 || wicket1 == 2){
+    gameOverAudio.play();
+    alert("PAKISTAN WON")
+  }
+  else if (score1==score2){
+    gameOverAudio.play();
+    alert("DRAW THE MATCH!")
+  }}}
+ )
+
+let name="KAlvium";
+console.log(`My name is ${name}`)
